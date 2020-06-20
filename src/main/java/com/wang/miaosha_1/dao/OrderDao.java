@@ -37,4 +37,12 @@ public interface OrderDao {
      */
     @Insert("insert into miaosha_order(user_id,order_id,goods_id) values(#{userId},#{orderId},#{goodsId})")
     public int insertMiaoOrder(MiaoshaOrder miaoshaOrder);
+
+    /**
+     * 根据id查询订单
+     * @param id
+     * @return
+     */
+    @Select("select * from order_info where id=#{id}")
+    public OrderInfo getOrderById(@Param("id") long id);
 }

@@ -18,6 +18,7 @@ public class CodeMsg {
     //商品模块5003××
 
     //订单模块5004××
+    public static CodeMsg ORDER_EMPTY = new CodeMsg(500400, "订单为空");
 
     //秒杀模块5005××
     public static CodeMsg MIAO_SHA_OVER = new CodeMsg(500500, "秒杀结束");

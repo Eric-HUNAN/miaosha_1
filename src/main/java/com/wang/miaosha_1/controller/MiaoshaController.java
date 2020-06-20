@@ -45,8 +45,9 @@ public class MiaoshaController {
         if(stock <= 0){
             return Result.error(CodeMsg.MIAO_SHA_OVER);
         }
-        //判断用户是否已经进行过秒杀
-        MiaoshaOrder order = orderService.getByUserIdAndGoodsId(miaoshaUser.getId(), id);
+        //判断用户是否已经进行过秒杀  --优化（从缓存中查）
+        MiaoshaOrder order = orderService.getOrderByUserIdAndGoodsId(miaoshaUser.getId(), id);
+        //MiaoshaOrder order = orderService.getByUserIdAndGoodsId(miaoshaUser.getId(), id);
         if(order != null){
             return Result.error(CodeMsg.MIAO_SHA_REPEATABLE);
         }

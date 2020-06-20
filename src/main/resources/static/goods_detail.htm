@@ -78,8 +78,7 @@ function doMiaosha(){
 		},
 		success:function(data){
 			if(data.code == 0){
-			    console.log(data);
-				//window.location.href="/order_detail.htm?orderId="+data.data.id;
+				window.location.href="/order_detail.htm?orderId="+data.data.id;
 			}else{
 				layer.msg(data.msg);
 			}
