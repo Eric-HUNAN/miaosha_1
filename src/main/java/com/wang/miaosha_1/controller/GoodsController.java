@@ -74,10 +74,19 @@ public class GoodsController {
      * 跳转商品详情页
      * @return
      */
-    @RequestMapping("/to_detail/{goodsId}")
-    public String detail(Model model,
+    @RequestMapping(value = "/to_detail/{goodsId}", produces = "text/html")
+    @ResponseBody
+    public String detail(HttpServletRequest request,
+                         HttpServletResponse response,
+                         Model model,
                          MiaoshaUser miaoshaUser,
                          @PathVariable("goodsId") long goodsId){
+        //取缓存
+        String html = redisService.get(GoodsKey.getGoodsDetail, "" + goodsId, String.class);
+        if(!StringUtils.isEmpty(html)){
+            return html;
+        }
+        //手动渲染
         model.addAttribute("user", miaoshaUser);
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         model.addAttribute("goods", goods);
@@ -103,6 +112,12 @@ public class GoodsController {
         }
         model.addAttribute("miaoshaStatus", miaoshaStatus);
         model.addAttribute("remainSeconds", remainSeconds);
-        return "goods_detail";
+        WebContext ctx = new WebContext(request, response, request.getServletContext(),
+                                        request.getLocale(), model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_detail", ctx);
+        if(!StringUtils.isEmpty(html)){
+            redisService.set(GoodsKey.getGoodsDetail, "" + goodsId, html);
+        }
+        return html;
     }
 }
