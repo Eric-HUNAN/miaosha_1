@@ -1,13 +1,22 @@
 package com.wang.miaosha_1.controller;
 
 import com.wang.miaosha_1.domain.MiaoshaUser;
+import com.wang.miaosha_1.redis.GoodsKey;
+import com.wang.miaosha_1.redis.RedisService;
 import com.wang.miaosha_1.service.GoodsService;
 import com.wang.miaosha_1.service.MiaoshaUserService;
 import com.wang.miaosha_1.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -22,17 +31,43 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private RedisService redisService;
+
+    @Autowired
+    private ThymeleafViewResolver thymeleafViewResolver;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
     /**
      * 跳转商品列表页
      * @return
      */
-    @RequestMapping("/to_list")
-    public String list(Model model, MiaoshaUser miaoshaUser){
+    @RequestMapping(value = "/to_list", produces = "text/html")
+    @ResponseBody
+    public String list(HttpServletRequest request,
+                       HttpServletResponse response,
+                       Model model,
+                       MiaoshaUser miaoshaUser){
         model.addAttribute("user", miaoshaUser);
         //查询商品列表
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
-        return "goods_list";
+        //取缓存页面
+        String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+        if(!StringUtils.isEmpty(html)){
+            return html;
+        }
+        //手动渲染
+        WebContext ctx = new WebContext(request, response, request.getServletContext(),
+                                        request.getLocale(), model.asMap());
+        html = thymeleafViewResolver.getTemplateEngine().process("goods_list", ctx);
+        if(!StringUtils.isEmpty(html)){
+            //将页面数据保存到缓存中
+            redisService.set(GoodsKey.getGoodsList, "", html);
+        }
+        return html;
     }
 
     /**

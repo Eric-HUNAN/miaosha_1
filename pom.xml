@@ -91,11 +91,12 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!--打war包-->
+		<!--tomcat支持-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
+			<!--打war包的时候环境要是provided-->
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
