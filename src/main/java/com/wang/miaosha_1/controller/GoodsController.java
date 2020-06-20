@@ -50,15 +50,15 @@ public class GoodsController {
                        HttpServletResponse response,
                        Model model,
                        MiaoshaUser miaoshaUser){
-        model.addAttribute("user", miaoshaUser);
-        //查询商品列表
-        List<GoodsVo> goodsList = goodsService.listGoodsVo();
-        model.addAttribute("goodsList", goodsList);
         //取缓存页面
         String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
         if(!StringUtils.isEmpty(html)){
             return html;
         }
+        model.addAttribute("user", miaoshaUser);
+        //查询商品列表
+        List<GoodsVo> goodsList = goodsService.listGoodsVo();
+        model.addAttribute("goodsList", goodsList);
         //手动渲染
         WebContext ctx = new WebContext(request, response, request.getServletContext(),
                                         request.getLocale(), model.asMap());
