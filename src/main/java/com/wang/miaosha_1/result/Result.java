@@ -3,7 +3,7 @@ package com.wang.miaosha_1.result;
 public class Result<T> {
     private int code;
     private String msg;
-    private T date;
+    private T data;
 
     /**
      * 成功时候的调用
@@ -23,10 +23,10 @@ public class Result<T> {
         return new Result<T>(cm);
     }
 
-    private Result(T date) {
+    private Result(T data) {
         this.code = 0;
         this.msg = "成功";
-        this.date = date;
+        this.data = data;
     }
 
     private Result(CodeMsg cm){
@@ -45,7 +45,7 @@ public class Result<T> {
         return msg;
     }
 
-    public T getDate() {
-        return date;
+    public T getData() {
+        return data;
     }
 }
