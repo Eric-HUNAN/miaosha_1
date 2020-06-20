@@ -90,6 +90,7 @@ function getOrderDetail(){
 		},
 		success:function(data){
 			if(data.code == 0){
+			    console.log(data.data);
 				render(data.data);
 			}else{
 				layer.msg(data.msg);

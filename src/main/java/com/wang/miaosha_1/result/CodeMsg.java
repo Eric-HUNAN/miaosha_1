@@ -14,6 +14,7 @@ public class CodeMsg {
     public static CodeMsg MOBILE_TYPE_ERROR = new CodeMsg(500202, "手机号格式错误");
     public static CodeMsg MOBILE_NOT_EXIT = new CodeMsg(500203, "手机号码不存在");
     public static CodeMsg PASSWORD_ERROR = new CodeMsg(500204, "用户输入密码错误");
+    public static CodeMsg SESSION_ERROR = new CodeMsg(502005, "session失效或不存在");
     //商品模块5003××
 
     //订单模块5004××
