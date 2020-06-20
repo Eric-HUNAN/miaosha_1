@@ -1,5 +1,6 @@
 package com.wang.miaosha_1.service;
 
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import com.wang.miaosha_1.dao.MiaoshaUserDao;
 import com.wang.miaosha_1.domain.MiaoshaUser;
 import com.wang.miaosha_1.exception.GlobalException;
@@ -33,7 +34,16 @@ public class MiaoshaUserService {
      * @return
      */
     public MiaoshaUser getById(long id){
-        return miaoshaUserDao.getById(id);
+        //从缓存取
+        MiaoshaUser miaoshaUser = redisService.get(MiaoshaUserKey.getById, "" + id,
+                                                   MiaoshaUser.class);
+        if(miaoshaUser != null){
+            return miaoshaUser;
+        }
+        //从数据库取
+        miaoshaUser = miaoshaUserDao.getById(id);
+        redisService.set(MiaoshaUserKey.getById, "" + id, miaoshaUser);
+        return miaoshaUser;
     }
 
     /**
@@ -97,5 +107,29 @@ public class MiaoshaUserService {
         cookie.setPath("/");
         //将Cookie写到HttpServletResponse
         response.addCookie(cookie);
+    }
+
+    /**
+     * 修改用户密码
+     * @param id
+     * @param formPass
+     * @return
+     */
+    public boolean updatePassword(String token, long id, String formPass){
+        //获取用户
+        MiaoshaUser miaoshaUser = getById(id);
+        if(miaoshaUser == null){
+            throw new GlobalException(CodeMsg.MOBILE_NOT_EXIT);
+        }
+        //更新数据库
+        MiaoshaUser user = new MiaoshaUser();
+        user.setId(id);
+        user.setPassword(MD5Util.formPassToDBPass(formPass, miaoshaUser.getSalt()));
+        miaoshaUserDao.update(user);
+        //修改缓存
+        redisService.delete(MiaoshaUserKey.getById, "" + id);
+        miaoshaUser.setPassword(user.getPassword());
+        redisService.set(MiaoshaUserKey.token, "token", miaoshaUser);
+        return true;
     }
 }
