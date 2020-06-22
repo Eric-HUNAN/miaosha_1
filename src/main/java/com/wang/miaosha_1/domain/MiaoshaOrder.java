@@ -6,7 +6,7 @@ package com.wang.miaosha_1.domain;
 public class MiaoshaOrder {
 	private Long id;
 	private Long userId;
-	private Long  orderId;
+	private Long orderId;
 	private Long goodsId;
 	public Long getId() {
 		return id;

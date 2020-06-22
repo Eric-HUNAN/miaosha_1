@@ -103,7 +103,7 @@ public class RedisService {
             //获取jedis
             jedis = jedisPool.getResource();
             //生成真正的key
-            String realKey = prefix + key;
+            String realKey = prefix.getKeyPrefix() + key;
             return jedis.incr(realKey);
         }finally{
             returnToPool(jedis);
@@ -123,7 +123,7 @@ public class RedisService {
             //获取redis
             jedis = jedisPool.getResource();
             //生成真正的key
-            String realKey = prefix + key;
+            String realKey = prefix.getKeyPrefix() + key;
             return jedis.decr(realKey);
         }finally{
             returnToPool(jedis);
@@ -142,7 +142,7 @@ public class RedisService {
             //获取redis
             jedis = jedisPool.getResource();
             //生成真正的key
-            String realKey = prefix + key;
+            String realKey = prefix.getKeyPrefix() + key;
             long res = jedis.del(realKey);
             return res > 0;
         }finally{
@@ -156,7 +156,7 @@ public class RedisService {
      * @param <T>
      * @return
      */
-    private <T> String beanToString(T value) {
+    public static <T> String beanToString(T value) {
         if(value == null){
             return null;
         }
@@ -179,7 +179,7 @@ public class RedisService {
      * @param <T>
      * @return
      */
-    private <T> T stringToBean(String value, Class<T> clazz) {
+    public static <T> T stringToBean(String value, Class<T> clazz) {
         if(value==null || value.length()<=0 || clazz==null){
             return null;
         }

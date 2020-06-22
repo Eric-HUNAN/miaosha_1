@@ -13,4 +13,6 @@ public class GoodsKey extends BasePrefix{
     public static GoodsKey getGoodsList = new GoodsKey(60,"gl");
     //商品详情页
     public static GoodsKey getGoodsDetail = new GoodsKey(60, "gd");
+    //秒杀商品数量
+    public static GoodsKey getMiaoshaGoodsStock = new GoodsKey(0,"gs" );
 }
