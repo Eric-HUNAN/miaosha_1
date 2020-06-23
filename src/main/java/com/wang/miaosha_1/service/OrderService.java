@@ -79,8 +79,8 @@ public class OrderService {
         orderDao.insert(orderInfo);
 
         MiaoshaOrder miaoshaOrder = new MiaoshaOrder();
-        miaoshaOrder.setGoodsId(orderInfo.getId());
         miaoshaOrder.setUserId(miaoshaUser.getId());
+        miaoshaOrder.setOrderId(orderInfo.getId());
         miaoshaOrder.setGoodsId(goods.getId());
         //生成秒杀订单
         orderDao.insertMiaoOrder(miaoshaOrder);
